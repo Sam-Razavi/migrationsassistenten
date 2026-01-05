@@ -1,0 +1,4 @@
+# Docker Compose for local development
+# Full config added in later commit
+version: "3.9"
+services: {}
