@@ -36,11 +36,11 @@ export default function CaseForm({ initialData, onSubmit, submitLabel = 'Spara' 
   const validate = (): boolean => {
     const errs: Partial<CaseFormData> = {}
     if (!form.case_number.trim()) errs.case_number = 'Ange målnummer'
-    if (!form.applicant_name.trim()) errs.applicant_name = 'Ange klagandens namn'
-    if (!form.dob.trim()) errs.dob = 'Ange födelsedatum'
+    if (!form.applicant_name.trim()) errs.applicant_name = 'Ange klagandens fullständiga namn'
+    if (!form.dob.trim()) errs.dob = 'Ange ett giltigt födelsedatum'
     if (!form.nationality.trim()) errs.nationality = 'Ange nationalitet'
-    if (!form.rejection_date.trim()) errs.rejection_date = 'Ange avslagsdatum'
-    if (!form.decision_type) errs.decision_type = 'Välj ärendetyp'
+    if (!form.rejection_date.trim()) errs.rejection_date = 'Ange datum för Migrationsverkets beslut'
+    if (!form.decision_type) errs.decision_type = 'Välj ärendetyp för att fortsätta'
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
