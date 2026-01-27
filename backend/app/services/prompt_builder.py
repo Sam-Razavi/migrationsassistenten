@@ -35,10 +35,23 @@ def build_user_prompt(case: Case) -> str:
     }
 
     law_refs = {
-        DecisionType.family_reunification: "5 kap. 3 c § UtlL, ECHR artikel 8, EU-direktiv 2003/86/EG",
-        DecisionType.asylum: "1 kap. 3 § UtlL, 4 kap. 1 § UtlL, ECHR artikel 3, ECHR artikel 8",
-        DecisionType.permanent_residence: "5 kap. 17 § UtlL, proportionalitetsprincipen",
-        DecisionType.work_permit: "6 kap. UtlL, EU:s rörlighetsdirektiv 2004/38/EG",
+        DecisionType.family_reunification: (
+            "5 kap. 3 c § UtlL, 5 kap. 16 § UtlL, ECHR artikel 8, "
+            "EU-direktiv 2003/86/EG om rätt till familjeåterförening, MIG 2012:13"
+        ),
+        DecisionType.asylum: (
+            "1 kap. 3 § UtlL (flyktingdefinition), 4 kap. 1 § UtlL, "
+            "4 kap. 2 § UtlL (alternativ skyddsstatus), ECHR artikel 3, ECHR artikel 8, "
+            "Genèvekonventionen 1951"
+        ),
+        DecisionType.permanent_residence: (
+            "5 kap. 17 § UtlL, 5 kap. 18 § UtlL, proportionalitetsprincipen, "
+            "MIG 2009:23, ECHR artikel 8"
+        ),
+        DecisionType.work_permit: (
+            "6 kap. 2 § UtlL, EU:s rörlighetsdirektiv 2004/38/EG, "
+            "proportionalitetsprincipen"
+        ),
     }
 
     evidence_text = ""
