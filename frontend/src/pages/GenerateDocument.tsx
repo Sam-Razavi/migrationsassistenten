@@ -64,10 +64,11 @@ export default function GenerateDocument() {
         }
       }
     } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : 'Okänt fel'
       setError(
-        err instanceof Error
-          ? `Generering misslyckades: ${err.message}`
-          : 'Generering misslyckades. Kontrollera att ANTHROPIC_API_KEY är konfigurerad.'
+        `Generering misslyckades: ${msg}. ` +
+        'Kontrollera att ANTHROPIC_API_KEY är konfigurerad och försök igen.'
       )
     } finally {
       setGenerating(false)
