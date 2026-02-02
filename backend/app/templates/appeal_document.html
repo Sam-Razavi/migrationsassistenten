@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>Överklagande — {{ case.case_number }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 2.5cm 2.5cm 2.5cm 3cm;
+      @bottom-center {
+        content: "Mål nr: {{ case.case_number }} | Sida " counter(page) " av " counter(pages);
+        font-size: 9pt;
+        color: #666;
+      }
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt;
+      line-height: 1.6;
+      color: #000;
+    }
+
+    .header {
+      margin-bottom: 2em;
+    }
+
+    .header-to {
+      font-weight: bold;
+      font-size: 13pt;
+    }
+
+    .header-meta {
+      margin-top: 0.5em;
+      font-size: 11pt;
+    }
+
+    .header-meta p {
+      margin: 0.2em 0;
+    }
+
+    h1.doc-title {
+      text-align: center;
+      font-size: 14pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 1.5em 0 1em;
+      border-bottom: 1px solid #000;
+      padding-bottom: 0.3em;
+    }
+
+    h2 {
+      font-size: 12pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 1.5em;
+      margin-bottom: 0.4em;
+      font-weight: bold;
+    }
+
+    .document-body {
+      white-space: pre-wrap;
+    }
+
+    .signature-block {
+      margin-top: 3em;
+      page-break-inside: avoid;
+    }
+
+    .signature-block p {
+      margin: 0.2em 0;
+    }
+
+    .signature-line {
+      margin-top: 2em;
+      border-top: 1px solid #000;
+      width: 12cm;
+      padding-top: 0.3em;
+      font-size: 11pt;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <p class="header-to">Till: Migrationsdomstolen</p>
+    <div class="header-meta">
+      <p><strong>Mål nr:</strong> {{ case.case_number }}</p>
+      <p><strong>Klagande:</strong> {{ case.applicant_name }}, {{ case.dob }}</p>
+      <p><strong>Nationalitet:</strong> {{ case.nationality }}</p>
+      <p><strong>Motpart:</strong> Migrationsverket</p>
+    </div>
+  </div>
+
+  <h1 class="doc-title">Överklagande av Migrationsverkets beslut</h1>
+
+  <div class="document-body">{{ document_text }}</div>
+
+  <div class="signature-block">
+    <p>Ort och datum: ___________________________</p>
+    <div class="signature-line">
+      <p>{{ case.applicant_name }}</p>
+      <p>Klagande / Ombud</p>
+    </div>
+  </div>
+
+</body>
+</html>
