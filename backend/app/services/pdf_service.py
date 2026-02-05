@@ -25,6 +25,13 @@ def generate_pdf(case, document_text: str) -> bytes:
         document_text=document_text,
         decision_type_label=_decision_type_label(case.decision_type),
     )
+    if "charset" not in html_content[:200].lower():
+        html_content = html_content.replace(
+            "<meta charset=",
+            '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n  <meta charset=',
+            1,
+        )
+
     pdf_bytes = HTML(
         string=html_content,
         base_url=str(TEMPLATES_DIR),
