@@ -71,7 +71,7 @@ export default function CaseBuilder() {
             <TimelineBuilder entries={timeline} onChange={setTimeline} />
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <button
               type="button"
               onClick={handleSave}
