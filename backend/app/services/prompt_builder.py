@@ -22,6 +22,12 @@ Relevanta rättskällor:
 - MIG-domar från Migrationsöverdomstolen
 - EU-direktiv 2003/86/EG om rätt till familjeåterförening
 
+I avsnittet GRUNDERNA FÖR ÖVERKLAGANDET ska du alltid inkludera ett proportionalitetsresonemang:
+- Beskriv det enskilda intresset (familjesammanhållning, personlig trygghet, etablerat privatliv)
+- Väg det mot det allmänna intresset (reglerad invandring)
+- Argumentera för att beslutets konsekvenser är oproportionerliga i förhållande till syftet
+- Hänvisa till ECHR artikel 8 punkt 2 och Migrationsöverdomstolens praxis
+
 Ge INTE juridisk rådgivning. Formulera endast det klaganden har angett som fakta.
 Var precis, formell och strukturerad. Inled alltid med rubrik och mottagare."""
 
