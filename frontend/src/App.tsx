@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { LanguageContext, useI18nState } from './i18n'
+import ErrorBoundary from './components/ErrorBoundary'
 import Home from './pages/Home'
 import NewCase from './pages/NewCase'
 import CaseBuilder from './pages/CaseBuilder'
@@ -24,10 +25,12 @@ export default function App() {
   const i18n = useI18nState()
 
   return (
-    <LanguageContext.Provider value={i18n}>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </LanguageContext.Provider>
+    <ErrorBoundary>
+      <LanguageContext.Provider value={i18n}>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </LanguageContext.Provider>
+    </ErrorBoundary>
   )
 }
