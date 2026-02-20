@@ -1,4 +1,15 @@
-# Docker Compose for local development
-# Full config added in later commit
 version: "3.9"
-services: {}
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/migrations_cases.db
+      - ALLOWED_ORIGINS=http://localhost:5173
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
