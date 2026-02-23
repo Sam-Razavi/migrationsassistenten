@@ -33,6 +33,11 @@ app.include_router(generate.router)
 app.include_router(export.router)
 
 
+@app.get("/health")
+async def health():
+    return {"status": "ok", "version": "1.0.0"}
+
+
 @app.get("/")
 async def root():
     return {"message": "Migrationsassistenten API", "version": "1.0.0"}
