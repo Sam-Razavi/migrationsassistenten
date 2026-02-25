@@ -76,7 +76,7 @@ export default function CaseBuilder() {
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="rounded-md bg-blue-600 px-6 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              className="rounded-md bg-blue-600 px-6 py-2.5 text-white font-medium hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
             >
               {saving ? 'Sparar...' : saved ? '✓ Sparat' : 'Spara'}
             </button>
