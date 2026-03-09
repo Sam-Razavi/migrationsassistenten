@@ -18,6 +18,12 @@ class TimelineEntry(BaseModel):
     description: str
 
 
+class CounterArgument(BaseModel):
+    id: str
+    category: str
+    text: str
+
+
 class CaseCreate(BaseModel):
     case_number: str
     applicant_name: str
@@ -40,6 +46,7 @@ class CaseUpdate(BaseModel):
     rejection_reason: Optional[str] = None
     evidence: Optional[List[EvidenceItem]] = None
     timeline: Optional[List[TimelineEntry]] = None
+    counter_arguments: Optional[List[CounterArgument]] = None
     generated_document: Optional[str] = None
 
 
@@ -55,6 +62,7 @@ class CaseResponse(BaseModel):
     rejection_reason: Optional[str] = None
     evidence: Optional[List[EvidenceItem]] = None
     timeline: Optional[List[TimelineEntry]] = None
+    counter_arguments: Optional[List[CounterArgument]] = None
     generated_document: Optional[str] = None
     created_at: datetime
     updated_at: datetime
