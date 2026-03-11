@@ -15,6 +15,12 @@ export interface TimelineEntry {
   description: string
 }
 
+export interface CounterArgument {
+  id: string
+  category: string
+  text: string
+}
+
 export interface Case {
   id: number
   case_number: string
@@ -27,6 +33,7 @@ export interface Case {
   rejection_reason?: string
   evidence?: EvidenceItem[]
   timeline?: TimelineEntry[]
+  counter_arguments?: CounterArgument[]
   generated_document?: string
   created_at: string
   updated_at: string
