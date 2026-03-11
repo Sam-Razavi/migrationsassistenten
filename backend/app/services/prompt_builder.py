@@ -83,6 +83,32 @@ def build_user_prompt(case: Case) -> str:
             if date and desc:
                 timeline_text += f"- {date}: {desc}\n"
 
+    category_labels = {
+        "ekonomisk_etablering": "Ekonomisk etablering",
+        "familjeband": "Familjeband",
+        "humanitart_skal": "Humanitärt skäl",
+        "procedurfel": "Procedurfel",
+        "proportionalitet": "Proportionalitet",
+    }
+
+    counter_args_text = ""
+    if case.counter_arguments:
+        args_by_category: dict[str, list[str]] = {}
+        for arg in case.counter_arguments:
+            if not isinstance(arg, dict):
+                continue
+            cat = arg.get("category", "")
+            text = arg.get("text", "")
+            if text:
+                label = category_labels.get(cat, cat)
+                args_by_category.setdefault(label, []).append(text)
+        if args_by_category:
+            counter_args_text = "\nKLAGANDENS EGNA ARGUMENT:\n"
+            for cat_label, texts in args_by_category.items():
+                counter_args_text += f"\n[{cat_label}]\n"
+                for t in texts:
+                    counter_args_text += f"- {t}\n"
+
     return f"""Upprätta ett komplett formellt överklagande med följande uppgifter:
 
 ÄRENDETYP: {decision_labels.get(case.decision_type, str(case.decision_type))}
@@ -104,13 +130,13 @@ KRONOLOGISKA HÄNDELSER:
 
 ÅBEROPAD BEVISNING:
 {evidence_text or "Ingen bevisning angiven"}
-
+{counter_args_text}
 Inled dokumentet med:
 Till: Migrationsdomstolen
 Mål nr: {case.case_number}
 Klagande: {case.applicant_name}, {case.dob}
 Motpart: Migrationsverket
 
-Skriv sedan överklagandet med de fyra avsnitten: YRKANDE, SAKFRAMSTÄLLNING, GRUNDERNA FÖR ÖVERKLAGANDET (inkludera proportionalitetsresonemang), BEVISNING.
+Skriv sedan överklagandet med de fyra avsnitten: YRKANDE, SAKFRAMSTÄLLNING, GRUNDERNA FÖR ÖVERKLAGANDET (inkludera proportionalitetsresonemang och klagandens egna argument), BEVISNING.
 Avsluta med plats för underskrift.
 """
