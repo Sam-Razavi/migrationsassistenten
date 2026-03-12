@@ -110,6 +110,40 @@ export default function Preview() {
               </ul>
             </Section>
           )}
+
+          {(caseData.counter_arguments ?? []).length > 0 && (
+            <Section title="Klagandens argument">
+              {(() => {
+                const CATEGORY_LABELS: Record<string, string> = {
+                  ekonomisk_etablering: 'Ekonomisk etablering',
+                  familjeband: 'Familjeband',
+                  humanitart_skal: 'Humanitärt skäl',
+                  procedurfel: 'Procedurfel',
+                  proportionalitet: 'Proportionalitet',
+                }
+                const grouped: Record<string, string[]> = {}
+                for (const arg of caseData.counter_arguments ?? []) {
+                  const label = CATEGORY_LABELS[arg.category] ?? arg.category
+                  if (!grouped[label]) grouped[label] = []
+                  grouped[label].push(arg.text)
+                }
+                return (
+                  <div className="space-y-3">
+                    {Object.entries(grouped).map(([cat, texts]) => (
+                      <div key={cat}>
+                        <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 mb-1">{cat}</span>
+                        <ul className="space-y-1">
+                          {texts.map((text, i) => (
+                            <li key={i} className="text-sm text-gray-800 pl-3 border-l-2 border-blue-200">{text}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )
+              })()}
+            </Section>
+          )}
         </div>
 
         <div className="mt-6 flex justify-end">
