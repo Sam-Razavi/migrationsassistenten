@@ -140,3 +140,36 @@ Motpart: Migrationsverket
 Skriv sedan överklagandet med de fyra avsnitten: YRKANDE, SAKFRAMSTÄLLNING, GRUNDERNA FÖR ÖVERKLAGANDET (inkludera proportionalitetsresonemang och klagandens egna argument), BEVISNING.
 Avsluta med plats för underskrift.
 """
+
+
+_SECTION_LABELS = {
+    "yrkande": "YRKANDE",
+    "sakframstallning": "SAKFRAMSTÄLLNING",
+    "grunder": "GRUNDERNA FÖR ÖVERKLAGANDET",
+    "bevisning": "BEVISNING",
+    "hela": "hela dokumentet",
+}
+
+
+def build_revision_system_prompt() -> str:
+    return """Du är en svensk juridisk dokumentassistent specialiserad på migrationsrätt.
+Din uppgift är att revidera ett specifikt avsnitt i ett befintligt överklagande enligt användarens instruktion.
+
+Regler:
+- Revidera ENDAST det angivna avsnittet. Behåll resten av dokumentet exakt som det är.
+- Skriv formell juridisk svenska.
+- Returnera det FULLSTÄNDIGA reviderade dokumentet, inte bara avsnittet.
+- Behåll dokumentets struktur: YRKANDE, SAKFRAMSTÄLLNING, GRUNDERNA FÖR ÖVERKLAGANDET, BEVISNING."""
+
+
+def build_revision_prompt(case: "Case", section: str, instruction: str, current_document: str) -> str:
+    section_label = _SECTION_LABELS.get(section, section)
+    return f"""Nedan följer ett befintligt överklagande för ärende {case.case_number} ({case.applicant_name}).
+
+INSTRUKTION: Revidera avsnittet "{section_label}" enligt följande:
+{instruction}
+
+BEFINTLIGT DOKUMENT:
+{current_document}
+
+Returnera det fullständiga dokumentet med det reviderade avsnittet. Ändra ingenting annat."""
