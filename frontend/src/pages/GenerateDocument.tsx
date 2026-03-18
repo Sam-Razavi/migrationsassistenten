@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useCase } from '../hooks/useCase'
 import DocumentPreview from '../components/DocumentPreview'
+import RevisionPanel from '../components/RevisionPanel'
 
 export default function GenerateDocument() {
   const { id } = useParams<{ id: string }>()
@@ -12,6 +13,8 @@ export default function GenerateDocument() {
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [done, setDone] = useState(false)
+  const [revising, setRevising] = useState(false)
+  const [revisionError, setRevisionError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -75,6 +78,59 @@ export default function GenerateDocument() {
     }
   }
 
+  const revise = async (section: string, instruction: string) => {
+    if (!id || !document) return
+    setRevising(true)
+    setRevisionError(null)
+
+    try {
+      const token = localStorage.getItem('migration_jwt')
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/generate/${id}/revise`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ section, instruction, current_document: document }),
+        }
+      )
+
+      if (!response.ok || !response.body) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let accumulated = ''
+
+      while (true) {
+        const { done: streamDone, value } = await reader.read()
+        if (streamDone) break
+
+        const lines = decoder.decode(value).split('\n')
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6)
+          if (data === '[DONE]') {
+            // revision complete
+          } else if (data.startsWith('[ERROR]')) {
+            throw new Error(data.slice(8))
+          } else {
+            accumulated += data.replace(/\\n/g, '\n')
+            setDocument(accumulated)
+          }
+        }
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Okänt fel'
+      setRevisionError(`Revidering misslyckades: ${msg}`)
+    } finally {
+      setRevising(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
@@ -115,13 +171,23 @@ export default function GenerateDocument() {
         )}
 
         {document && (
-          <DocumentPreview
-            document={document}
-            caseId={Number(id)}
-            onChange={setDocument}
-            generating={generating}
-            onRegenerate={generate}
-          />
+          <>
+            <DocumentPreview
+              document={document}
+              caseId={Number(id)}
+              onChange={setDocument}
+              generating={generating}
+              onRegenerate={generate}
+            />
+            <div className="mt-6">
+              {revisionError && (
+                <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-4 text-red-700 text-sm">
+                  {revisionError}
+                </div>
+              )}
+              <RevisionPanel onRevise={revise} loading={revising} />
+            </div>
+          </>
         )}
       </div>
     </div>
