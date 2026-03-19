@@ -9,7 +9,7 @@ const SECTIONS = [
 ]
 
 interface Props {
-  onRevise: (section: string, instruction: string) => void
+  onRevise: (section: string, instruction: string) => Promise<void>
   loading: boolean
 }
 
@@ -17,9 +17,11 @@ export default function RevisionPanel({ onRevise, loading }: Props) {
   const [section, setSection] = useState(SECTIONS[0].value)
   const [instruction, setInstruction] = useState('')
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!instruction.trim()) return
-    onRevise(section, instruction.trim())
+    await onRevise(section, instruction.trim())
+    setInstruction('')
+    setSection(SECTIONS[0].value)
   }
 
   return (
