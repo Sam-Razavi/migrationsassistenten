@@ -28,6 +28,10 @@ async def test_list_cases(async_client: AsyncClient, auth_headers):
     data = resp.json()
     assert isinstance(data, list)
     assert len(data) >= 1
+    # Each item has required fields
+    for item in data:
+        assert "id" in item
+        assert "case_number" in item
 
 
 async def test_get_case_by_id(async_client: AsyncClient, auth_headers):

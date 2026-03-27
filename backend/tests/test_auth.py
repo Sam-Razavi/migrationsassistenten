@@ -5,13 +5,14 @@ from httpx import AsyncClient
 async def test_register_success(async_client: AsyncClient):
     resp = await async_client.post(
         "/auth/register",
-        json={"email": "new_user@example.com", "password": "SecurePass!99"},
+        json={"email": "new_user2@example.com", "password": "SecurePass!99"},
     )
-    assert resp.status_code == 201
+    assert resp.status_code == 201, f"Expected 201, got {resp.status_code}: {resp.text}"
     data = resp.json()
-    assert data["email"] == "new_user@example.com"
+    assert data["email"] == "new_user2@example.com"
     assert "id" in data
     assert "hashed_password" not in data
+    assert "created_at" in data
 
 
 async def test_register_duplicate_email(async_client: AsyncClient):
