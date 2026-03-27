@@ -13,8 +13,14 @@ This is **not** a legal advice platform. It is a document drafting assistant tha
 1. **Case form** — enter applicant details, case number, decision type, and rejection reasons
 2. **Evidence checklist** — log all supporting documents (marriage certificate, cohabitation proof, financial documents, etc.)
 3. **Timeline builder** — record key dates (application, interview, rejection)
-4. **AI generation** — uses Claude to draft a formal överklagande in Swedish legal style
-5. **PDF export** — download a court-ready document
+4. **Counter-argument builder** — add your own arguments per category (economic establishment, family ties, humanitarian grounds, procedural error, proportionality)
+5. **AI generation** — uses Claude to draft a formal överklagande in Swedish legal style, incorporating your counter-arguments
+6. **AI revision** — ask Claude to revise a specific section (Yrkande, Sakframställning, Grunder, Bevisning, or the whole document) with a plain-language instruction
+7. **PDF export** — download a court-ready document
+
+## Authentication
+
+The application requires a user account. Register at `/register` with your email and password. Your cases are private and visible only to you.
 
 ## Tech stack
 
@@ -85,17 +91,36 @@ ANTHROPIC_API_KEY=your_key_here
 DATABASE_URL=sqlite+aiosqlite:///./migrations_cases.db
 ENVIRONMENT=development
 ALLOWED_ORIGINS=http://localhost:5173
+SECRET_KEY=change-me-in-production-use-a-long-random-string
+```
+
+## Running tests
+
+### Backend (pytest)
+
+```bash
+cd backend
+pytest
+```
+
+### Frontend (Vitest)
+
+```bash
+cd frontend
+npm run test
 ```
 
 ## Usage
 
-1. Click **Nytt ärende** to start a new case
-2. Fill in the applicant's details and the Migrationsverket decision information
-3. Add evidence items and key timeline dates
-4. Review the case summary
-5. Click **Generera överklagande** — the AI drafts a formal appeal in Swedish
-6. Edit the generated text if needed
-7. Download the PDF
+1. Register an account and log in
+2. Click **Nytt ärende** to start a new case
+3. Fill in the applicant's details and the Migrationsverket decision information
+4. Add evidence items, key timeline dates, and your own counter-arguments
+5. Review the case summary in the Preview page
+6. Click **Generera överklagande** — the AI drafts a formal appeal in Swedish incorporating your counter-arguments
+7. Use the **Revidera avsnitt** panel to ask Claude to revise a specific section
+8. Edit the generated text if needed
+9. Download the PDF
 
 ## Document structure
 
