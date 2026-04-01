@@ -24,6 +24,7 @@ class Case(Base):
     dob: Mapped[str] = mapped_column(String(20), nullable=False)
     nationality: Mapped[str] = mapped_column(String(100), nullable=False)
     rejection_date: Mapped[str] = mapped_column(String(20), nullable=False)
+    appeal_deadline: Mapped[str | None] = mapped_column(String(20), nullable=True)
     mv_reference: Mapped[str | None] = mapped_column(String(200), nullable=True)
     decision_type: Mapped[DecisionType] = mapped_column(SAEnum(DecisionType), nullable=False)
     rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -37,3 +38,4 @@ class Case(Base):
     )
 
     owner: Mapped["User"] = relationship("User", back_populates="cases")  # type: ignore[name-defined]
+    versions: Mapped[list["DocumentVersion"]] = relationship("DocumentVersion", back_populates="case", cascade="all, delete-orphan")  # type: ignore[name-defined]
