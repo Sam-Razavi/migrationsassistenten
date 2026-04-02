@@ -57,6 +57,7 @@ class CaseResponse(BaseModel):
     dob: str
     nationality: str
     rejection_date: str
+    appeal_deadline: Optional[str] = None
     mv_reference: Optional[str] = None
     decision_type: DecisionType
     rejection_reason: Optional[str] = None
