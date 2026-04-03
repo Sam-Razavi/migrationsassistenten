@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useCase, type Case } from '../hooks/useCase'
 import { useLanguage } from '../i18n'
 import LanguageToggle from '../components/LanguageToggle'
+import DeadlineBadge from '../components/DeadlineBadge'
 
 const DECISION_TYPE_LABELS: Record<string, Record<string, string>> = {
   family_reunification: { sv: 'Familjeåterförening', en: 'Family reunification' },
@@ -62,7 +63,10 @@ export default function Home() {
               {cases.map(c => (
                 <li key={c.id} className="flex items-center justify-between px-6 py-4 hover:bg-gray-50">
                   <div>
-                    <p className="font-medium text-gray-900">{c.applicant_name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-gray-900">{c.applicant_name}</p>
+                      <DeadlineBadge appealDeadline={c.appeal_deadline} />
+                    </div>
                     <p className="text-sm text-gray-500">
                       {c.case_number} · {DECISION_TYPE_LABELS[c.decision_type]?.[lang] ?? c.decision_type}
                     </p>
