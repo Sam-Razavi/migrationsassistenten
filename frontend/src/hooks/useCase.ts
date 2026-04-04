@@ -28,6 +28,7 @@ export interface Case {
   dob: string
   nationality: string
   rejection_date: string
+  appeal_deadline?: string
   mv_reference?: string
   decision_type: string
   rejection_reason?: string
