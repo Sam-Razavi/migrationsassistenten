@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import EvidenceChecklist from '../components/EvidenceChecklist'
 import TimelineBuilder from '../components/TimelineBuilder'
 import CounterArguments, { type CounterArgument } from '../components/CounterArguments'
+import DeadlineBadge from '../components/DeadlineBadge'
 import { useCase, type EvidenceItem, type TimelineEntry } from '../hooks/useCase'
 
 export default function CaseBuilder() {
@@ -14,7 +15,7 @@ export default function CaseBuilder() {
   const [counterArguments, setCounterArguments] = useState<CounterArgument[]>([])
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
-  const [caseData, setCaseData] = useState<{ applicant_name: string; case_number: string } | null>(null)
+  const [caseData, setCaseData] = useState<{ applicant_name: string; case_number: string; appeal_deadline?: string } | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -22,7 +23,7 @@ export default function CaseBuilder() {
       setEvidence(c.evidence ?? [])
       setTimeline(c.timeline ?? [])
       setCounterArguments((c.counter_arguments as CounterArgument[]) ?? [])
-      setCaseData({ applicant_name: c.applicant_name, case_number: c.case_number })
+      setCaseData({ applicant_name: c.applicant_name, case_number: c.case_number, appeal_deadline: c.appeal_deadline })
     })
   }, [id, getCase])
 
@@ -57,9 +58,10 @@ export default function CaseBuilder() {
           <a href="/" className="text-sm text-blue-600 hover:underline">← Tillbaka</a>
           <h1 className="mt-2 text-3xl font-bold text-gray-900">Bygg ärende</h1>
           {caseData && (
-            <p className="mt-1 text-gray-600">
-              {caseData.applicant_name} · {caseData.case_number}
-            </p>
+            <div className="mt-1 flex items-center gap-3 flex-wrap">
+              <p className="text-gray-600">{caseData.applicant_name} · {caseData.case_number}</p>
+              <DeadlineBadge appealDeadline={caseData.appeal_deadline} />
+            </div>
           )}
         </div>
 
