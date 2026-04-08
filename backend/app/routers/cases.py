@@ -5,8 +5,10 @@ from sqlalchemy import select
 from typing import List
 from app.database import get_db
 from app.models.case import Case
+from app.models.document_version import DocumentVersion
 from app.models.user import User
 from app.schemas.case import CaseCreate, CaseUpdate, CaseResponse
+from app.schemas.document_version import DocumentVersionResponse, DocumentVersionDetail
 from app.services.auth_service import get_current_user, oauth2_scheme
 
 
@@ -90,6 +92,72 @@ async def update_case(
         setattr(case, field, value)
     if "rejection_date" in update_data:
         case.appeal_deadline = _compute_deadline(update_data["rejection_date"])
+    await db.commit()
+    await db.refresh(case)
+    return case
+
+
+async def _get_owned_case(case_id: int, db: AsyncSession, user: User) -> Case:
+    result = await db.execute(
+        select(Case).where(Case.id == case_id, Case.user_id == user.id)
+    )
+    case = result.scalar_one_or_none()
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+    return case
+
+
+@router.get("/{case_id}/versions", response_model=List[DocumentVersionResponse])
+async def list_versions(
+    case_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(_require_user),
+):
+    await _get_owned_case(case_id, db, current_user)
+    result = await db.execute(
+        select(DocumentVersion)
+        .where(DocumentVersion.case_id == case_id)
+        .order_by(DocumentVersion.created_at.desc())
+    )
+    return result.scalars().all()
+
+
+@router.get("/{case_id}/versions/{version_id}", response_model=DocumentVersionDetail)
+async def get_version(
+    case_id: int,
+    version_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(_require_user),
+):
+    await _get_owned_case(case_id, db, current_user)
+    result = await db.execute(
+        select(DocumentVersion).where(
+            DocumentVersion.id == version_id, DocumentVersion.case_id == case_id
+        )
+    )
+    version = result.scalar_one_or_none()
+    if not version:
+        raise HTTPException(status_code=404, detail="Version not found")
+    return version
+
+
+@router.post("/{case_id}/versions/{version_id}/restore", response_model=CaseResponse)
+async def restore_version(
+    case_id: int,
+    version_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(_require_user),
+):
+    case = await _get_owned_case(case_id, db, current_user)
+    result = await db.execute(
+        select(DocumentVersion).where(
+            DocumentVersion.id == version_id, DocumentVersion.case_id == case_id
+        )
+    )
+    version = result.scalar_one_or_none()
+    if not version:
+        raise HTTPException(status_code=404, detail="Version not found")
+    case.generated_document = version.content
     await db.commit()
     await db.refresh(case)
     return case
