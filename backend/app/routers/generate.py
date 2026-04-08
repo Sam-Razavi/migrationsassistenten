@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.database import get_db, AsyncSessionLocal
 from app.models.case import Case
+from app.models.document_version import DocumentVersion
 from app.services.ai_service import generate_appeal
 from app.services.prompt_builder import build_system_prompt, build_user_prompt, build_revision_prompt, build_revision_system_prompt
 
@@ -38,6 +39,7 @@ async def generate_document(case_id: int, db: AsyncSession = Depends(get_db)):
             case_obj = res.scalar_one_or_none()
             if case_obj:
                 case_obj.generated_document = full_text
+                session.add(DocumentVersion(case_id=case_id, content=full_text, label="Genererat"))
                 await session.commit()
 
         yield "data: [DONE]\n\n"
@@ -86,11 +88,17 @@ async def revise_document(
             return
 
         full_text = "".join(collected)
+        section_labels = {
+            "yrkande": "Yrkande", "sakframstallning": "Sakframställning",
+            "grunder": "Grunder", "bevisning": "Bevisning", "hela": "Hela dokumentet",
+        }
+        section_label = section_labels.get(body.section, body.section)
         async with AsyncSessionLocal() as session:
             res = await session.execute(select(Case).where(Case.id == case_id))
             case_obj = res.scalar_one_or_none()
             if case_obj:
                 case_obj.generated_document = full_text
+                session.add(DocumentVersion(case_id=case_id, content=full_text, label=f"Reviderat: {section_label}"))
                 await session.commit()
 
         yield "data: [DONE]\n\n"
