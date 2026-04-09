@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import init_db
 from app.routers import cases, generate, export, auth
+import app.models.document_version  # noqa: F401 — ensure table is registered with Base
 
 
 @asynccontextmanager
