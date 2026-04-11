@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useCase } from '../hooks/useCase'
+import { useVersions } from '../hooks/useVersions'
 import DocumentPreview from '../components/DocumentPreview'
 import RevisionPanel from '../components/RevisionPanel'
+import VersionHistory from '../components/VersionHistory'
 
 export default function GenerateDocument() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { getCase } = useCase()
+  const { restoreVersion } = useVersions()
+
+  const handleRestoreVersion = async (versionId: number) => {
+    if (!id) return
+    await restoreVersion(Number(id), versionId)
+    const c = await getCase(Number(id))
+    setDocument(c.generated_document ?? '')
+  }
   const [caseData, setCaseData] = useState<{ applicant_name: string; case_number: string } | null>(null)
   const [document, setDocument] = useState('')
   const [generating, setGenerating] = useState(false)
@@ -15,6 +25,7 @@ export default function GenerateDocument() {
   const [done, setDone] = useState(false)
   const [revising, setRevising] = useState(false)
   const [revisionError, setRevisionError] = useState<string | null>(null)
+  const [versionRefresh, setVersionRefresh] = useState(0)
 
   useEffect(() => {
     if (!id) return
@@ -58,6 +69,7 @@ export default function GenerateDocument() {
           const data = line.slice(6)
           if (data === '[DONE]') {
             setDone(true)
+            setVersionRefresh(r => r + 1)
           } else if (data.startsWith('[ERROR]')) {
             throw new Error(data.slice(8))
           } else {
@@ -114,7 +126,7 @@ export default function GenerateDocument() {
           if (!line.startsWith('data: ')) continue
           const data = line.slice(6)
           if (data === '[DONE]') {
-            // revision complete
+            setVersionRefresh(r => r + 1)
           } else if (data.startsWith('[ERROR]')) {
             throw new Error(data.slice(8))
           } else {
@@ -186,6 +198,13 @@ export default function GenerateDocument() {
                 </div>
               )}
               <RevisionPanel onRevise={revise} loading={revising} />
+            </div>
+            <div className="mt-6">
+              <VersionHistory
+                caseId={Number(id)}
+                refreshTrigger={versionRefresh}
+                onRestore={handleRestoreVersion}
+              />
             </div>
           </>
         )}
