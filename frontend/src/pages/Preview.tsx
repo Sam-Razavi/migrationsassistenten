@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useCase, type Case } from '../hooks/useCase'
 import { useLanguage } from '../i18n'
 import LanguageToggle from '../components/LanguageToggle'
+import DeadlineBadge from '../components/DeadlineBadge'
 
 const DECISION_LABELS: Record<string, string> = {
   family_reunification: 'Familjeåterförening',
@@ -51,7 +52,10 @@ export default function Preview() {
               {t.back}
             </button>
             <h1 className="mt-2 text-3xl font-bold text-gray-900">{t.preview}</h1>
-            <p className="mt-1 text-gray-600">Granska ärendets uppgifter innan du genererar överklagandet.</p>
+            <div className="mt-1 flex items-center gap-3">
+              <p className="text-gray-600">Granska ärendets uppgifter innan du genererar överklagandet.</p>
+              <DeadlineBadge appealDeadline={caseData.appeal_deadline} />
+            </div>
           </div>
           <LanguageToggle />
         </div>
