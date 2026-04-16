@@ -48,6 +48,7 @@ class CaseUpdate(BaseModel):
     timeline: Optional[List[TimelineEntry]] = None
     counter_arguments: Optional[List[CounterArgument]] = None
     generated_document: Optional[str] = None
+    appeal_deadline: Optional[str] = None
 
 
 class CaseResponse(BaseModel):
