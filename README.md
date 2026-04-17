@@ -16,7 +16,9 @@ This is **not** a legal advice platform. It is a document drafting assistant tha
 4. **Counter-argument builder** — add your own arguments per category (economic establishment, family ties, humanitarian grounds, procedural error, proportionality)
 5. **AI generation** — uses Claude to draft a formal överklagande in Swedish legal style, incorporating your counter-arguments
 6. **AI revision** — ask Claude to revise a specific section (Yrkande, Sakframställning, Grunder, Bevisning, or the whole document) with a plain-language instruction
-7. **PDF export** — download a court-ready document
+7. **Appeal deadline tracking** — automatically computes the 21-day filing deadline from the rejection date; color-coded countdown badge (green/amber/red) shown on case list, CaseBuilder, and Preview pages
+8. **Document version history** — every generated or revised document is saved as a named version; browse history and restore any previous draft with one click
+9. **PDF export** — download a court-ready document
 
 ## Authentication
 
@@ -119,8 +121,9 @@ npm run test
 5. Review the case summary in the Preview page
 6. Click **Generera överklagande** — the AI drafts a formal appeal in Swedish incorporating your counter-arguments
 7. Use the **Revidera avsnitt** panel to ask Claude to revise a specific section
-8. Edit the generated text if needed
-9. Download the PDF
+8. Browse **Dokumentversioner** to see all previous drafts and restore one if needed
+9. Edit the generated text if needed
+10. Download the PDF
 
 ## Document structure
 
