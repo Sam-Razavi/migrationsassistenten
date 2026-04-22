@@ -26,7 +26,7 @@ async def _require_user(
     return await get_current_user(token=token, db=db)
 
 
-@router.post("/", response_model=CaseResponse)
+@router.post("/", response_model=CaseResponse, status_code=201)
 async def create_case(
     case_data: CaseCreate,
     db: AsyncSession = Depends(get_db),
