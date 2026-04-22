@@ -6,15 +6,30 @@ from sqlalchemy import select
 from app.database import get_db, AsyncSessionLocal
 from app.models.case import Case
 from app.models.document_version import DocumentVersion
+from app.models.user import User
 from app.services.ai_service import generate_appeal
 from app.services.prompt_builder import build_system_prompt, build_user_prompt, build_revision_prompt, build_revision_system_prompt
+from app.services.auth_service import get_current_user, oauth2_scheme
 
 router = APIRouter(prefix="/generate", tags=["generate"])
 
 
+async def _require_user(
+    token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_db),
+) -> User:
+    return await get_current_user(token=token, db=db)
+
+
 @router.post("/{case_id}")
-async def generate_document(case_id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Case).where(Case.id == case_id))
+async def generate_document(
+    case_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(_require_user),
+):
+    result = await db.execute(
+        select(Case).where(Case.id == case_id, Case.user_id == current_user.id)
+    )
     case = result.scalar_one_or_none()
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
@@ -62,8 +77,11 @@ async def revise_document(
     case_id: int,
     body: RevisionRequest,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(_require_user),
 ):
-    result = await db.execute(select(Case).where(Case.id == case_id))
+    result = await db.execute(
+        select(Case).where(Case.id == case_id, Case.user_id == current_user.id)
+    )
     case = result.scalar_one_or_none()
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
