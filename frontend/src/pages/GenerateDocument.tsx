@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useCase } from '../hooks/useCase'
+import { useGenerate } from '../hooks/useGenerate'
 import { useVersions } from '../hooks/useVersions'
 import DocumentPreview from '../components/DocumentPreview'
 import RevisionPanel from '../components/RevisionPanel'
@@ -10,137 +11,36 @@ export default function GenerateDocument() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { getCase } = useCase()
+  const { generate, revise, document, setDocument, generating, revising, error } = useGenerate()
   const { restoreVersion } = useVersions()
-
-  const handleRestoreVersion = async (versionId: number) => {
-    if (!id) return
-    await restoreVersion(Number(id), versionId)
-    const c = await getCase(Number(id))
-    setDocument(c.generated_document ?? '')
-  }
   const [caseData, setCaseData] = useState<{ applicant_name: string; case_number: string } | null>(null)
-  const [document, setDocument] = useState('')
-  const [generating, setGenerating] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [done, setDone] = useState(false)
-  const [revising, setRevising] = useState(false)
-  const [revisionError, setRevisionError] = useState<string | null>(null)
   const [versionRefresh, setVersionRefresh] = useState(0)
 
   useEffect(() => {
     if (!id) return
     getCase(Number(id)).then(c => {
       setCaseData({ applicant_name: c.applicant_name, case_number: c.case_number })
-      if (c.generated_document) {
-        setDocument(c.generated_document)
-        setDone(true)
-      }
+      if (c.generated_document) setDocument(c.generated_document)
     })
   }, [id, getCase])
 
-  const generate = async () => {
+  const handleGenerate = async () => {
     if (!id) return
-    setGenerating(true)
-    setError(null)
-    setDocument('')
-    setDone(false)
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/generate/${id}`,
-        { method: 'POST' }
-      )
-
-      if (!response.ok || !response.body) {
-        throw new Error(`HTTP ${response.status}`)
-      }
-
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-      let accumulated = ''
-
-      while (true) {
-        const { done: streamDone, value } = await reader.read()
-        if (streamDone) break
-
-        const lines = decoder.decode(value).split('\n')
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue
-          const data = line.slice(6)
-          if (data === '[DONE]') {
-            setDone(true)
-            setVersionRefresh(r => r + 1)
-          } else if (data.startsWith('[ERROR]')) {
-            throw new Error(data.slice(8))
-          } else {
-            accumulated += data.replace(/\\n/g, '\n')
-            setDocument(accumulated)
-          }
-        }
-      }
-    } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : 'Okänt fel'
-      setError(
-        `Generering misslyckades: ${msg}. ` +
-        'Kontrollera att ANTHROPIC_API_KEY är konfigurerad och försök igen.'
-      )
-    } finally {
-      setGenerating(false)
-    }
+    await generate(Number(id))
+    setVersionRefresh(r => r + 1)
   }
 
-  const revise = async (section: string, instruction: string) => {
-    if (!id || !document) return
-    setRevising(true)
-    setRevisionError(null)
+  const handleRevise = async (section: string, instruction: string) => {
+    if (!id) return
+    await revise(Number(id), section, instruction, document)
+    setVersionRefresh(r => r + 1)
+  }
 
-    try {
-      const token = localStorage.getItem('migration_jwt')
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/generate/${id}/revise`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ section, instruction, current_document: document }),
-        }
-      )
-
-      if (!response.ok || !response.body) {
-        throw new Error(`HTTP ${response.status}`)
-      }
-
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-      let accumulated = ''
-
-      while (true) {
-        const { done: streamDone, value } = await reader.read()
-        if (streamDone) break
-
-        const lines = decoder.decode(value).split('\n')
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue
-          const data = line.slice(6)
-          if (data === '[DONE]') {
-            setVersionRefresh(r => r + 1)
-          } else if (data.startsWith('[ERROR]')) {
-            throw new Error(data.slice(8))
-          } else {
-            accumulated += data.replace(/\\n/g, '\n')
-            setDocument(accumulated)
-          }
-        }
-      }
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Okänt fel'
-      setRevisionError(`Revidering misslyckades: ${msg}`)
-    } finally {
-      setRevising(false)
-    }
+  const handleRestoreVersion = async (versionId: number) => {
+    if (!id) return
+    await restoreVersion(Number(id), versionId)
+    const c = await getCase(Number(id))
+    setDocument(c.generated_document ?? '')
   }
 
   return (
@@ -168,7 +68,7 @@ export default function GenerateDocument() {
               Klicka på knappen nedan för att generera ett formellt överklagande baserat på ärendets uppgifter.
             </p>
             <button
-              onClick={generate}
+              onClick={handleGenerate}
               className="rounded-md bg-green-600 px-8 py-3 text-white font-semibold hover:bg-green-700 transition-colors"
             >
               Generera överklagande
@@ -189,15 +89,10 @@ export default function GenerateDocument() {
               caseId={Number(id)}
               onChange={setDocument}
               generating={generating}
-              onRegenerate={generate}
+              onRegenerate={handleGenerate}
             />
             <div className="mt-6">
-              {revisionError && (
-                <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-4 text-red-700 text-sm">
-                  {revisionError}
-                </div>
-              )}
-              <RevisionPanel onRevise={revise} loading={revising} />
+              <RevisionPanel onRevise={handleRevise} loading={revising} />
             </div>
             <div className="mt-6">
               <VersionHistory
