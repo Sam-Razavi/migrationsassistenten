@@ -6,7 +6,7 @@ export default function LanguageToggle() {
   return (
     <button
       onClick={toggle}
-      className="rounded border border-gray-300 px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+      className="rounded-md border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
       aria-label="Toggle language"
     >
       {lang === 'sv' ? 'EN' : 'SV'}
