@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CaseForm, { type CaseFormData } from '../components/CaseForm'
 import { useCase } from '../hooks/useCase'
 import { useLanguage } from '../i18n'
-import LanguageToggle from '../components/LanguageToggle'
 
 const TEMPLATES: Record<string, Partial<CaseFormData>> = {
   family_reunification: {
@@ -34,47 +33,44 @@ export default function NewCase() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-        <div className="mb-8 flex items-start justify-between">
-          <div>
-            <a href="/" className="text-sm text-blue-600 hover:underline">{t.back}</a>
-            <h1 className="mt-2 text-3xl font-bold text-gray-900">{t.newCase}</h1>
-            <p className="mt-1 text-gray-600">Fyll i uppgifter om klaganden och Migrationsverkets beslut.</p>
-          </div>
-          <LanguageToggle />
-        </div>
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+      <div className="mb-6">
+        <Link to="/" className="text-sm text-navy-700 hover:underline">
+          ← Ärenden
+        </Link>
+        <h1 className="mt-2 text-xl font-semibold text-gray-900">{t.newCase}</h1>
+        <p className="mt-0.5 text-sm text-slate-500">Fyll i uppgifter om klaganden och Migrationsverkets beslut.</p>
+      </div>
 
-        <div className="mb-4 flex items-center gap-2">
-          <span className="text-sm text-gray-600">Använd mall:</span>
-          <button
-            type="button"
-            onClick={() => setTemplate(TEMPLATES.family_reunification)}
-            className="rounded border border-blue-300 px-3 py-1 text-sm text-blue-700 hover:bg-blue-50"
-          >
-            Familjeåterförening
-          </button>
-          <button
-            type="button"
-            onClick={() => setTemplate(TEMPLATES.asylum)}
-            className="rounded border border-blue-300 px-3 py-1 text-sm text-blue-700 hover:bg-blue-50"
-          >
-            Asyl
-          </button>
-        </div>
+      <div className="mb-4 flex items-center gap-2">
+        <span className="text-sm text-slate-500">Använd mall:</span>
+        <button
+          type="button"
+          onClick={() => setTemplate(TEMPLATES.family_reunification)}
+          className="rounded-md border border-navy-200 px-3 py-1.5 text-sm text-navy-700 bg-navy-50 hover:bg-navy-100"
+        >
+          Familjeåterförening
+        </button>
+        <button
+          type="button"
+          onClick={() => setTemplate(TEMPLATES.asylum)}
+          className="rounded-md border border-navy-200 px-3 py-1.5 text-sm text-navy-700 bg-navy-50 hover:bg-navy-100"
+        >
+          Asyl
+        </button>
+      </div>
 
-        {error && (
-          <div className="mb-4 rounded-md bg-red-50 p-4 text-red-700 text-sm">{error}</div>
-        )}
+      {error && (
+        <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">{error}</div>
+      )}
 
-        <div className="rounded-xl bg-white p-8 shadow-sm">
-          <CaseForm
-            key={JSON.stringify(template)}
-            initialData={template}
-            onSubmit={handleSubmit}
-            submitLabel={t.saveAndContinue}
-          />
-        </div>
+      <div className="card p-6">
+        <CaseForm
+          key={JSON.stringify(template)}
+          initialData={template}
+          onSubmit={handleSubmit}
+          submitLabel={t.saveAndContinue}
+        />
       </div>
     </div>
   )

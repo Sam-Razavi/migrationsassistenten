@@ -44,46 +44,56 @@ export default function GenerateDocument() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <div className="mb-6">
-          <button onClick={() => navigate(-1)} className="text-sm text-blue-600 hover:underline">
-            ← Tillbaka
-          </button>
-          <h1 className="mt-2 text-3xl font-bold text-gray-900">Generera överklagande</h1>
-          {caseData && (
-            <p className="mt-1 text-gray-600">{caseData.applicant_name} · {caseData.case_number}</p>
-          )}
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <div className="mb-6">
+        <button onClick={() => navigate(-1)} className="text-sm text-navy-700 hover:underline">
+          ← Tillbaka
+        </button>
+        <h1 className="mt-2 text-xl font-semibold text-gray-900">Generera överklagande</h1>
+        {caseData && (
+          <p className="mt-0.5 text-sm text-slate-500">{caseData.applicant_name} · {caseData.case_number}</p>
+        )}
+      </div>
+
+      {error && (
+        <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+          {error}
         </div>
+      )}
 
-        {error && (
-          <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-4 text-red-700 text-sm">
-            {error}
+      {!document && !generating && (
+        <div className="card p-10 text-center">
+          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
           </div>
-        )}
+          <h3 className="text-base font-semibold text-gray-900 mb-1">Inget överklagande genererat ännu</h3>
+          <p className="text-sm text-slate-500 mb-6">
+            Klicka på knappen nedan för att generera ett formellt överklagande baserat på ärendets uppgifter.
+          </p>
+          <button
+            onClick={handleGenerate}
+            className="btn-success px-8 py-2.5 text-base"
+          >
+            Generera överklagande
+          </button>
+        </div>
+      )}
 
-        {!document && !generating && (
-          <div className="rounded-xl bg-white p-8 shadow-sm text-center">
-            <p className="text-gray-600 mb-6">
-              Klicka på knappen nedan för att generera ett formellt överklagande baserat på ärendets uppgifter.
-            </p>
-            <button
-              onClick={handleGenerate}
-              className="rounded-md bg-green-600 px-8 py-3 text-white font-semibold hover:bg-green-700 transition-colors"
-            >
-              Generera överklagande
-            </button>
-          </div>
-        )}
+      {generating && !document && (
+        <div className="card p-10 text-center">
+          <div className="animate-pulse text-slate-400">Genererar överklagande...</div>
+        </div>
+      )}
 
-        {generating && !document && (
-          <div className="rounded-xl bg-white p-8 shadow-sm text-center">
-            <div className="animate-pulse text-gray-500">Genererar överklagande...</div>
-          </div>
-        )}
-
-        {document && (
-          <>
+      {document && (
+        <div className="lg:grid lg:grid-cols-3 lg:gap-6">
+          <div className="lg:col-span-2">
             <DocumentPreview
               document={document}
               caseId={Number(id)}
@@ -91,19 +101,17 @@ export default function GenerateDocument() {
               generating={generating}
               onRegenerate={handleGenerate}
             />
-            <div className="mt-6">
-              <RevisionPanel onRevise={handleRevise} loading={revising} />
-            </div>
-            <div className="mt-6">
-              <VersionHistory
-                caseId={Number(id)}
-                refreshTrigger={versionRefresh}
-                onRestore={handleRestoreVersion}
-              />
-            </div>
-          </>
-        )}
-      </div>
+          </div>
+          <div className="mt-6 lg:mt-0 space-y-4">
+            <RevisionPanel onRevise={handleRevise} loading={revising} />
+            <VersionHistory
+              caseId={Number(id)}
+              refreshTrigger={versionRefresh}
+              onRestore={handleRestoreVersion}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
