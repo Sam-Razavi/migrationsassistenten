@@ -25,8 +25,6 @@ export default function EvidenceChecklist({ items, onChange }: Props) {
   const [newLabel, setNewLabel] = useState('')
   const [newDesc, setNewDesc] = useState('')
 
-  const presetIds = new Set(items.filter(i => i.is_preset).map(i => i.label))
-
   const togglePreset = (preset: Omit<EvidenceItem, 'id' | 'checked'>) => {
     const existing = items.find(i => i.is_preset && i.label === preset.label)
     if (existing) {
@@ -57,12 +55,15 @@ export default function EvidenceChecklist({ items, onChange }: Props) {
         <h3 className="text-sm font-semibold text-gray-700 mb-2">Vanliga bevishandlingar</h3>
         <div className="space-y-2">
           {PRESET_ITEMS.map(preset => (
-            <label key={preset.label} className="flex items-center gap-3 rounded-lg border border-gray-200 px-4 py-3 hover:bg-gray-50 cursor-pointer">
+            <label
+              key={preset.label}
+              className="flex items-center gap-3 rounded-md border border-slate-200 px-4 py-2.5 hover:bg-slate-50 cursor-pointer transition-colors"
+            >
               <input
                 type="checkbox"
                 checked={isChecked(preset.label)}
                 onChange={() => togglePreset(preset)}
-                className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                className="h-4 w-4 rounded border-slate-300 text-navy-700 focus:ring-navy-600"
               />
               <span className="text-sm text-gray-800">{preset.label}</span>
             </label>
@@ -75,7 +76,7 @@ export default function EvidenceChecklist({ items, onChange }: Props) {
           <h3 className="text-sm font-semibold text-gray-700 mb-2">Egna bevishandlingar</h3>
           <div className="space-y-2">
             {customItems.map(item => (
-              <div key={item.id} className="flex items-start justify-between rounded-lg border border-blue-100 bg-blue-50 px-4 py-3">
+              <div key={item.id} className="flex items-start justify-between rounded-md border border-blue-200 bg-blue-50 px-4 py-2.5">
                 <div>
                   <p className="text-sm font-medium text-gray-800">{item.label}</p>
                   {item.description && <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>}
@@ -83,7 +84,7 @@ export default function EvidenceChecklist({ items, onChange }: Props) {
                 <button
                   type="button"
                   onClick={() => removeItem(item.id)}
-                  className="text-red-400 hover:text-red-600 text-sm ml-4"
+                  className="text-xs text-red-500 hover:text-red-700 transition-colors ml-4"
                 >
                   Ta bort
                 </button>
@@ -93,7 +94,7 @@ export default function EvidenceChecklist({ items, onChange }: Props) {
         </div>
       )}
 
-      <div className="rounded-lg border border-dashed border-gray-300 p-4">
+      <div className="rounded-md border border-dashed border-slate-300 p-4 mt-3">
         <h3 className="text-sm font-semibold text-gray-700 mb-2">Lägg till egen bevishandling</h3>
         <div className="space-y-2">
           <input
@@ -101,20 +102,20 @@ export default function EvidenceChecklist({ items, onChange }: Props) {
             value={newLabel}
             onChange={e => setNewLabel(e.target.value)}
             placeholder="Namn på handlingen"
-            className="block w-full rounded border-gray-300 border px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+            className="form-input"
           />
           <input
             type="text"
             value={newDesc}
             onChange={e => setNewDesc(e.target.value)}
             placeholder="Kort beskrivning (valfritt)"
-            className="block w-full rounded border-gray-300 border px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+            className="form-input"
           />
           <button
             type="button"
             onClick={addCustom}
             disabled={!newLabel.trim()}
-            className="rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-secondary text-xs px-3 py-1.5"
           >
             Lägg till
           </button>

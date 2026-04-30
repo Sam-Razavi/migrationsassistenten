@@ -19,13 +19,13 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-8">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-8">
           <div className="max-w-md text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Något gick fel</h1>
-            <p className="text-gray-600 mb-6">{this.state.error?.message}</p>
+            <h1 className="text-xl font-semibold text-gray-900 mb-2">Något gick fel</h1>
+            <p className="text-sm text-slate-500 mb-6">{this.state.error?.message}</p>
             <button
               onClick={() => window.location.reload()}
-              className="rounded-md bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+              className="btn-primary px-6"
             >
               Ladda om sidan
             </button>

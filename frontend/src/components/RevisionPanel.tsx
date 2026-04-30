@@ -25,19 +25,19 @@ export default function RevisionPanel({ onRevise, loading }: Props) {
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900 mb-1">Revidera avsnitt</h2>
-      <p className="text-sm text-gray-500 mb-4">
+    <div className="card p-5">
+      <h2 className="text-base font-semibold text-gray-900 mb-1">Revidera avsnitt</h2>
+      <p className="text-sm text-slate-500 mb-4">
         Välj vilket avsnitt du vill revidera och beskriv ändringen.
       </p>
 
       <div className="space-y-3">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Avsnitt</label>
+          <label className="form-label">Avsnitt</label>
           <select
             value={section}
             onChange={e => setSection(e.target.value)}
-            className="block w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+            className="form-input"
           >
             {SECTIONS.map(s => (
               <option key={s.value} value={s.value}>{s.label}</option>
@@ -46,13 +46,13 @@ export default function RevisionPanel({ onRevise, loading }: Props) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Instruktion</label>
+          <label className="form-label">Instruktion</label>
           <textarea
             value={instruction}
             onChange={e => setInstruction(e.target.value)}
             rows={3}
             placeholder="Beskriv hur avsnittet ska ändras..."
-            className="block w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 resize-none"
+            className="form-input resize-none"
           />
         </div>
 
@@ -60,7 +60,7 @@ export default function RevisionPanel({ onRevise, loading }: Props) {
           type="button"
           onClick={handleSubmit}
           disabled={!instruction.trim() || loading}
-          className="rounded-md bg-blue-600 px-5 py-2 text-sm text-white font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn-primary"
         >
           {loading ? 'Reviderar...' : 'Revidera'}
         </button>

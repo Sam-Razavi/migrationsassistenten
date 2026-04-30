@@ -36,17 +36,17 @@ export default function VersionHistory({ caseId, onRestore, refreshTrigger }: Pr
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900 mb-1">Dokumentversioner</h2>
-      <p className="text-sm text-gray-500 mb-4">
+    <div className="card p-5">
+      <h2 className="text-base font-semibold text-gray-900 mb-1">Versionshistorik</h2>
+      <p className="text-sm text-slate-500 mb-4">
         Varje generering och revidering sparas automatiskt. Klicka Återställ för att gå tillbaka till en tidigare version.
       </p>
 
-      {loading && <p className="text-sm text-gray-400">Laddar versioner...</p>}
+      {loading && <p className="text-sm text-slate-400">Laddar versioner...</p>}
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       {!loading && versions.length === 0 && (
-        <p className="text-sm text-gray-400 text-center py-3">Inga versioner sparade ännu</p>
+        <p className="text-sm text-slate-400 text-center py-3">Inga versioner sparade ännu</p>
       )}
 
       {versions.length > 0 && (
@@ -54,23 +54,23 @@ export default function VersionHistory({ caseId, onRestore, refreshTrigger }: Pr
           {versions.map((v, idx) => (
             <li
               key={v.id}
-              className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3"
+              className="flex justify-between px-4 py-3 rounded-md border border-slate-200 text-sm"
             >
               <div>
-                <p className="text-sm font-medium text-gray-800">
+                <p className="font-medium text-gray-800">
                   {v.label ?? 'Version'}
                   {idx === 0 && (
-                    <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">aktuell</span>
+                    <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 font-medium">aktuell</span>
                   )}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">{formatDate(v.created_at)}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{formatDate(v.created_at)}</p>
               </div>
               {idx !== 0 && (
                 <button
                   type="button"
                   onClick={() => handleRestore(v.id)}
                   disabled={restoring === v.id}
-                  className="text-sm text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                  className="text-navy-700 text-sm hover:underline disabled:opacity-40"
                 >
                   {restoring === v.id ? 'Återställer...' : 'Återställ'}
                 </button>

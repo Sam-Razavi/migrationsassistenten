@@ -19,24 +19,24 @@ export default function DeadlineBadge({ appealDeadline, className = '' }: Props)
   const urgent = !expired && days <= 7
   const warning = !expired && !urgent && days <= 14
 
-  let bg = 'bg-green-100 text-green-800'
+  let style = 'bg-emerald-50 text-emerald-700 border border-emerald-200'
   let label = ''
 
   if (expired) {
-    bg = 'bg-gray-100 text-gray-500'
+    style = 'bg-slate-100 text-slate-500'
     label = 'Överklagandetiden har gått ut'
   } else if (urgent) {
-    bg = 'bg-red-100 text-red-700'
+    style = 'bg-red-50 text-red-700 border border-red-200'
     label = `⚠ ${days} dag${days === 1 ? '' : 'ar'} kvar`
   } else if (warning) {
-    bg = 'bg-amber-100 text-amber-800'
+    style = 'bg-amber-50 text-amber-700 border border-amber-200'
     label = `${days} dagar kvar`
   } else {
     label = `${days} dagar kvar`
   }
 
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${bg} ${className}`}>
+    <span className={`inline-flex items-center rounded-md text-xs font-medium px-2 py-0.5 ${style} ${className}`}>
       {label}
     </span>
   )

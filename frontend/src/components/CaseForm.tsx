@@ -63,80 +63,80 @@ export default function CaseForm({ initialData, onSubmit, submitLabel = 'Spara' 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Målnummer *</label>
+          <label className="form-label">Målnummer *</label>
           <input
             type="text"
             value={form.case_number}
             onChange={set('case_number')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+            className="form-input mt-1"
             placeholder="t.ex. UM 1234-25"
           />
-          {errors.case_number && <p className="mt-1 text-sm text-red-600">{errors.case_number}</p>}
+          {errors.case_number && <p className="mt-1 text-xs text-red-600">{errors.case_number}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Klagandens fullständiga namn *</label>
+          <label className="form-label">Klagandens fullständiga namn *</label>
           <input
             type="text"
             value={form.applicant_name}
             onChange={set('applicant_name')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+            className="form-input mt-1"
           />
-          {errors.applicant_name && <p className="mt-1 text-sm text-red-600">{errors.applicant_name}</p>}
+          {errors.applicant_name && <p className="mt-1 text-xs text-red-600">{errors.applicant_name}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Födelsedatum *</label>
+          <label className="form-label">Födelsedatum *</label>
           <input
             type="date"
             value={form.dob}
             onChange={set('dob')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+            className="form-input mt-1"
           />
-          {errors.dob && <p className="mt-1 text-sm text-red-600">{errors.dob}</p>}
+          {errors.dob && <p className="mt-1 text-xs text-red-600">{errors.dob}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Nationalitet *</label>
+          <label className="form-label">Nationalitet *</label>
           <input
             type="text"
             value={form.nationality}
             onChange={set('nationality')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+            className="form-input mt-1"
           />
-          {errors.nationality && <p className="mt-1 text-sm text-red-600">{errors.nationality}</p>}
+          {errors.nationality && <p className="mt-1 text-xs text-red-600">{errors.nationality}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Avslagsdatum *</label>
+          <label className="form-label">Avslagsdatum *</label>
           <input
             type="date"
             value={form.rejection_date}
             onChange={set('rejection_date')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+            className="form-input mt-1"
           />
-          {errors.rejection_date && <p className="mt-1 text-sm text-red-600">{errors.rejection_date}</p>}
+          {errors.rejection_date && <p className="mt-1 text-xs text-red-600">{errors.rejection_date}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Migrationsverkets referensnummer</label>
+          <label className="form-label">Migrationsverkets referensnummer</label>
           <input
             type="text"
             value={form.mv_reference}
             onChange={set('mv_reference')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+            className="form-input mt-1"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Ärendetyp *</label>
+        <label className="form-label">Ärendetyp *</label>
         <select
           value={form.decision_type}
           onChange={set('decision_type')}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+          className="form-input mt-1"
         >
           <option value="">Välj ärendetyp...</option>
           <option value="family_reunification">Familjeåterförening</option>
@@ -144,16 +144,16 @@ export default function CaseForm({ initialData, onSubmit, submitLabel = 'Spara' 
           <option value="permanent_residence">Permanent uppehållstillstånd</option>
           <option value="work_permit">Arbetstillstånd</option>
         </select>
-        {errors.decision_type && <p className="mt-1 text-sm text-red-600">{errors.decision_type}</p>}
+        {errors.decision_type && <p className="mt-1 text-xs text-red-600">{errors.decision_type}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Migrationsverkets avslagsskäl</label>
+        <label className="form-label">Migrationsverkets avslagsskäl</label>
         <textarea
           value={form.rejection_reason}
           onChange={set('rejection_reason')}
           rows={4}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+          className="form-input mt-1"
           placeholder="Beskriv varför Migrationsverket avslog ansökan..."
         />
       </div>
@@ -162,7 +162,7 @@ export default function CaseForm({ initialData, onSubmit, submitLabel = 'Spara' 
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-md bg-blue-600 px-6 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn-primary"
         >
           {submitting ? 'Sparar...' : submitLabel}
         </button>

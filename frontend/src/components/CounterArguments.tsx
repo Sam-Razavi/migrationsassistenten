@@ -50,8 +50,8 @@ export default function CounterArguments({ items, onChange }: Props) {
             onClick={() => setSelectedCategory(cat.value)}
             className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
               selectedCategory === cat.value
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
+                ? 'bg-navy-800 text-white border-navy-800'
+                : 'bg-white text-slate-600 border-slate-300 hover:border-navy-400 hover:text-navy-700'
             }`}
           >
             {cat.label}
@@ -65,13 +65,13 @@ export default function CounterArguments({ items, onChange }: Props) {
           onChange={e => setText(e.target.value)}
           rows={3}
           placeholder={`Beskriv ditt argument under "${getCategoryLabel(selectedCategory)}"...`}
-          className="block w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 resize-none"
+          className="form-input resize-none"
         />
         <button
           type="button"
           onClick={add}
           disabled={!text.trim()}
-          className="rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary text-xs px-3 py-1.5"
         >
           Lägg till argument
         </button>
@@ -82,10 +82,10 @@ export default function CounterArguments({ items, onChange }: Props) {
           {items.map(item => (
             <div
               key={item.id}
-              className="flex items-start justify-between rounded-lg border border-gray-200 bg-white px-4 py-3"
+              className="flex items-start justify-between rounded-md border border-blue-200 bg-blue-50 px-4 py-2.5"
             >
               <div className="flex-1 min-w-0">
-                <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 mb-1">
+                <span className="inline-block rounded bg-navy-100 px-2 py-0.5 text-xs font-medium text-navy-700 mb-1">
                   {getCategoryLabel(item.category)}
                 </span>
                 <p className="text-sm text-gray-800 whitespace-pre-wrap">{item.text}</p>
@@ -93,7 +93,7 @@ export default function CounterArguments({ items, onChange }: Props) {
               <button
                 type="button"
                 onClick={() => remove(item.id)}
-                className="ml-3 text-red-400 hover:text-red-600 text-sm shrink-0"
+                className="ml-3 text-xs text-red-500 hover:text-red-700 transition-colors shrink-0"
               >
                 Ta bort
               </button>
@@ -103,7 +103,7 @@ export default function CounterArguments({ items, onChange }: Props) {
       )}
 
       {items.length === 0 && (
-        <p className="text-sm text-gray-400 text-center py-3">Inga argument tillagda ännu</p>
+        <p className="text-sm text-slate-400 text-center py-3">Inga argument tillagda ännu</p>
       )}
     </div>
   )
