@@ -8,8 +8,19 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - DATABASE_URL=sqlite+aiosqlite:////app/data/migrations_cases.db
-      - ALLOWED_ORIGINS=http://localhost:5173
-    env_file:
-      - ./backend/.env
+      DATABASE_URL: sqlite+aiosqlite:////app/data/migrations_cases.db
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5173}
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
     restart: unless-stopped
