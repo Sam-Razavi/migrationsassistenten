@@ -1,5 +1,20 @@
 # Migrationsassistenten
 
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=flat-square&logo=vite&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-aiosqlite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![Alembic](https://img.shields.io/badge/Alembic-migrations-6BA539?style=flat-square)
+![JWT](https://img.shields.io/badge/Auth-JWT_HS256-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
+![Claude AI](https://img.shields.io/badge/AI-Claude_API-CC785C?style=flat-square)
+![WeasyPrint](https://img.shields.io/badge/PDF-WeasyPrint-E44D26?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker-compose-2496ED?style=flat-square&logo=docker&logoColor=white)
+![pytest](https://img.shields.io/badge/Tests-pytest_%2B_Vitest-0A9EDC?style=flat-square&logo=pytest&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+
 > A structured web tool that helps individuals prepare formal Swedish migration court appeal documents (överklaganden).
 
 ## Background
@@ -86,15 +101,42 @@ npm run dev
 
 The frontend runs at `http://localhost:5173` and the API at `http://localhost:8000`.
 
+## Docker deployment
+
+```bash
+cp backend/.env.example backend/.env
+# Edit backend/.env — set ANTHROPIC_API_KEY and SECRET_KEY
+
+ANTHROPIC_API_KEY=sk-... \
+SECRET_KEY=$(openssl rand -hex 32) \
+ALLOWED_ORIGINS=https://yourdomain.com \
+VITE_API_URL=https://api.yourdomain.com \
+docker compose up -d --build
+```
+
+The frontend is served on port **3000**, the backend API on port **8000**.
+
+### PaaS (Vercel / Render / Railway)
+
+**Backend** (Render / Railway):
+- Build command: `pip install -r requirements.txt`
+- Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- Environment variables: `ANTHROPIC_API_KEY`, `SECRET_KEY`, `DATABASE_URL`, `ALLOWED_ORIGINS`
+
+**Frontend** (Vercel / Netlify):
+- Build command: `npm run build`
+- Output directory: `dist`
+- Environment variable: `VITE_API_URL=https://your-backend-url`
+
 ## Environment variables
 
-```env
-ANTHROPIC_API_KEY=your_key_here
-DATABASE_URL=sqlite+aiosqlite:///./migrations_cases.db
-ENVIRONMENT=development
-ALLOWED_ORIGINS=http://localhost:5173
-SECRET_KEY=change-me-in-production-use-a-long-random-string
-```
+| Variable | Required | Description |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | ✅ | Claude API key from console.anthropic.com |
+| `SECRET_KEY` | ✅ | Random 32-byte hex string for JWT signing |
+| `DATABASE_URL` | — | SQLAlchemy URL (default: SQLite) |
+| `ALLOWED_ORIGINS` | — | CORS origin for the frontend (default: localhost:5173) |
+| `VITE_API_URL` | — | Backend URL used by the frontend build |
 
 ## Running tests
 
