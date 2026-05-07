@@ -1,3 +1,4 @@
+import uuid
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
@@ -5,6 +6,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 
 from app.main import app
 from app.database import Base, get_db
+import app.routers.generate as _gen_router
 
 TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -35,6 +37,7 @@ async def db() -> AsyncSession:
 @pytest_asyncio.fixture
 async def async_client():
     app.dependency_overrides[get_db] = override_get_db
+    _gen_router.AsyncSessionLocal = TestSessionLocal
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
@@ -45,7 +48,7 @@ async def async_client():
 
 @pytest_asyncio.fixture
 async def test_user(async_client: AsyncClient):
-    payload = {"email": "test@example.com", "password": "TestPass123!"}
+    payload = {"email": f"user-{uuid.uuid4().hex[:8]}@test.com", "password": "TestPass123!"}
     resp = await async_client.post("/auth/register", json=payload)
     assert resp.status_code == 201
     return payload

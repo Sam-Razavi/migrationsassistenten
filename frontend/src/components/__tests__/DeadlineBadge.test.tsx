@@ -21,7 +21,7 @@ describe('DeadlineBadge', () => {
   it('shows green badge for more than 14 days remaining', () => {
     render(<DeadlineBadge appealDeadline={daysFrom(20)} />)
     const badge = screen.getByText(/dagar kvar/)
-    expect(badge.className).toContain('green')
+    expect(badge.className).toContain('emerald')
   })
 
   it('shows amber badge for 7-14 days remaining', () => {

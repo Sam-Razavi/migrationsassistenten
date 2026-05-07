@@ -33,7 +33,7 @@ describe('CaseForm', () => {
     fireEvent.change(screen.getAllByRole('textbox')[1], {
       target: { value: 'Test Person' },
     })
-    fireEvent.change(screen.getByDisplayValue(''), { target: { value: 'asylum' } })
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'asylum' } })
 
     const dateInputs = document.querySelectorAll('input[type="date"]')
     fireEvent.change(dateInputs[0], { target: { value: '1990-01-01' } })

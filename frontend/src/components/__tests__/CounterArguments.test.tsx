@@ -47,6 +47,6 @@ describe('CounterArguments', () => {
     render(<CounterArguments items={[]} onChange={vi.fn()} />)
     fireEvent.click(screen.getByText('Proportionalitet'))
     const chip = screen.getByText('Proportionalitet')
-    expect(chip.className).toContain('bg-blue-600')
+    expect(chip.className).toContain('bg-navy-800')
   })
 })
