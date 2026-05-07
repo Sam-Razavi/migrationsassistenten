@@ -14,6 +14,7 @@
 ![Docker](https://img.shields.io/badge/Docker-compose-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![pytest](https://img.shields.io/badge/Tests-pytest_%2B_Vitest-0A9EDC?style=flat-square&logo=pytest&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+[![CI](https://github.com/Sam-Razavi/migrationsassistenten/actions/workflows/ci.yml/badge.svg)](https://github.com/Sam-Razavi/migrationsassistenten/actions/workflows/ci.yml)
 
 > A structured web tool that helps individuals prepare formal Swedish migration court appeal documents (överklaganden).
 
