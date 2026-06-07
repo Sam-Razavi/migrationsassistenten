@@ -2,13 +2,18 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import VersionHistory from '../VersionHistory'
 
+const mockFetchVersions = vi.hoisted(() =>
+  vi.fn().mockResolvedValue([
+    { id: 1, case_id: 42, label: 'Genererat', created_at: '2026-04-10T12:00:00' },
+    { id: 2, case_id: 42, label: 'Reviderat: Yrkande', created_at: '2026-04-11T09:30:00' },
+  ])
+)
+const mockRestoreVersion = vi.hoisted(() => vi.fn().mockResolvedValue(undefined))
+
 vi.mock('../../hooks/useVersions', () => ({
   useVersions: () => ({
-    fetchVersions: vi.fn().mockResolvedValue([
-      { id: 1, case_id: 42, label: 'Genererat', created_at: '2026-04-10T12:00:00' },
-      { id: 2, case_id: 42, label: 'Reviderat: Yrkande', created_at: '2026-04-11T09:30:00' },
-    ]),
-    restoreVersion: vi.fn().mockResolvedValue(undefined),
+    fetchVersions: mockFetchVersions,
+    restoreVersion: mockRestoreVersion,
     loading: false,
     error: null,
   }),
